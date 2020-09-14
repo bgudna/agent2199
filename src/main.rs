@@ -10,10 +10,13 @@ const LIMIT_FPS: i32 = 20; // 20 frames-per-second maximum
 
 struct Tcod {
     root: Root,
+    con: Offscreen,
 }
 
 fn main() {
     tcod::system::set_fps(LIMIT_FPS);
+
+    let con = Offscreen::new(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     let root = Root::initializer()
         .font("arial10x10.png", FontLayout::Tcod)
@@ -22,16 +25,27 @@ fn main() {
         .title("Agent2199 - an absolute dummy name")
         .init();
     
-    let mut tcod = Tcod { root };
+    let mut tcod = Tcod { root, con };
 
     let mut player_x = SCREEN_WIDTH / 2;
     let mut player_y = SCREEN_HEIGHT / 2;
 
     //game loop is here
     while !tcod.root.window_closed() {
-        tcod.root.set_default_foreground(GREEN);
-        tcod.root.clear();
-        tcod.root.put_char(player_x, player_y, '@', BackgroundFlag::None);
+        tcod.con.set_default_foreground(GREEN);
+        tcod.con.clear();
+        tcod.con.put_char(player_x, player_y, '@', BackgroundFlag::None);
+        
+        blit(
+            &tcod.con,
+            (0, 0),
+            (SCREEN_WIDTH, SCREEN_HEIGHT),
+            &mut tcod.root,
+            (0, 0),
+            1.0,
+            1.0,
+        );
+        
         tcod.root.flush();
         tcod.root.wait_for_keypress(true);
         // handle keys and exit game if needed
@@ -39,8 +53,12 @@ fn main() {
         if exit {
             break;
         }
+
     }
+
 }
+
+
 
 fn handle_keys(tcod: &mut Tcod, player_x: &mut i32, player_y: &mut i32) -> bool {
     // todo: handle keys
