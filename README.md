@@ -6,6 +6,8 @@ just started - nothing running yet
 
 ### TODO
 - [ ] fill this todo list
+- [ ] draw a new spritesheet / character map / font
+- [ ] game logo and package art / concept art
 
 ## Reminder
  * to compile just do a 'cargo run --release'
